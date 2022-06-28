@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8", content="text/html">
+<title>WebSocket</title>
+</head>
+<body>
+    <form>
+        <input type="text" id="message" name="message" value="">
+        <input type="button" id="send" value="Send">
+        <input onclick="disconnect()" value="Disconnect" type="button">
+    </form>
+    <br>
+    <div id="messages"></div>
+    <script type="text/javascript">
+        var ws = new WebSocket("ws://localhost:8080/");
+        var messageTextArea = document.getElementById("message");
+        ws.onopen = function(message) {
+            messageTextArea.value += "Connected";
+        };
+        ws.onmessage = function(message) {
+            messageTextArea.value += "Receive from server ->" +message.data + "\n";
+        };
+        ws.onclose = function(message) {
+            messageTextArea.value += "Disconnected";
+        };
+        ws.onerror = function(message){
+            messageTextArea.value += "Error";
+        };
+        function sendMessage(){
+            var message = document.getElementById("message").value;
+            messageTextArea.value += "Send to server ->" +message + "\n";
+            ws.send(message.value);
+            message.value="";
+        }
+        function disconnect() {
+            WebSocket.close();
+        }
+    </script>ws
+</body>
+</html>
